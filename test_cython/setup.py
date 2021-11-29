@@ -1,3 +1,8 @@
+# REFERENCES:
+# https://github.com/rpep/2017-03-02-SPUG-Cython-Talk/tree/master/cuda-cython
+# https://github.com/endernewton/tf-faster-rcnn/blob/master/lib/setup.py
+# To compile in the same directory: python setup.py build_ext --inplace
+
 import  os
 from os.path import join as pjoin
 from setuptools import setup
@@ -65,9 +70,11 @@ ext = Extension('hellocython',
                 # library_dirs=[CUDA['lib64']],
                 libraries=['cudart'],
                 language='c',
-                # this syntax is specific to this build system
-                # we're only going to use certain compiler args with nvcc and not with gcc
+                # This syntax is specific to this build system
+                # We're only going to use certain compiler args with nvcc and not with gcc
                 # the implementation of this trick is in customize_compiler() below
+                # For nvcc we use the Turing architecture: sm_75
+                # See: https://arnon.dk/matching-sm-architectures-arch-and-gencode-for-various-nvidia-cards/
                 extra_compile_args={'gcc': [],
                                     'nvcc': ['-arch=sm_75', '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
                 include_dirs = [numpy_include, CUDA['include'], '.'],
